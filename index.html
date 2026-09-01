@@ -13,10 +13,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .brand-logo{display:inline-flex;align-items:center;justify-content:center;line-height:0;transform:none!important}
-    .brand-logo img{display:block;width:auto;height:56px;object-fit:contain}
-    .footer-brand.brand-logo img{height:42px}
-    @media(max-width:720px){.brand-logo img{height:44px}.footer-brand.brand-logo img{height:34px}}
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+      background: #0a0a0a;
+      padding: 8px 14px;
+      border-radius: 10px;
+      transform: none;
+    }
+    .brand-logo img {
+      display: block;
+      width: auto;
+      height: 38px;
+      object-fit: contain;
+    }
+    .footer-brand.brand-logo {
+      width: fit-content;
+    }
+    .footer-brand.brand-logo img {
+      height: 34px;
+    }
+    @media (max-width: 720px) {
+      .brand-logo {
+        padding: 6px 10px;
+        border-radius: 8px;
+      }
+      .brand-logo img { height: 32px; }
+      .footer-brand.brand-logo img { height: 30px; }
+    }
   </style>
 </head>
 <body>
