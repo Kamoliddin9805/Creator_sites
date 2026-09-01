@@ -33,11 +33,50 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 const projectForm = document.getElementById('projectForm');
 if (projectForm) {
-  projectForm.addEventListener('submit', (event) => {
+  projectForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+
     const status = projectForm.querySelector('.form-status');
-    const name = new FormData(projectForm).get('name') || 'Mijoz';
-    status.textContent = `${name}, so‘rovingiz qabul qilindi. Keyingi bosqichda forma Telegram yoki CRM bilan ulanadi.`;
-    projectForm.reset();
+    const submitButton = projectForm.querySelector('button[type="submit"]');
+    const formData = new FormData(projectForm);
+
+    const payload = {
+      name: String(formData.get('name') || '').trim(),
+      phone: String(formData.get('phone') || '').trim(),
+      type: String(formData.get('type') || '').trim()
+    };
+
+    if (!payload.name || !payload.phone) {
+      status.textContent = 'Ism va telefon raqamini kiriting.';
+      return;
+    }
+
+    const originalButtonText = submitButton.innerHTML;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Yuborilmoqda...';
+    status.textContent = '';
+
+    try {
+      const response = await fetch('/api/send-telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || 'So‘rovni yuborib bo‘lmadi');
+      }
+
+      status.textContent = `${payload.name}, so‘rovingiz yuborildi. Tez orada siz bilan bog‘lanamiz.`;
+      projectForm.reset();
+    } catch (error) {
+      console.error('Telegram form error:', error);
+      status.textContent = 'Xatolik yuz berdi. Iltimos, qayta urinib ko‘ring.';
+    } finally {
+      submitButton.disabled = false;
+      submitButton.innerHTML = originalButtonText;
+    }
   });
 }
