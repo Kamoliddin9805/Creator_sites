@@ -3,7 +3,7 @@ document.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
   try {
     const url = new URL(link.href, window.location.href);
     if (url.pathname.endsWith('/styles.css')) {
-      url.searchParams.set('v', '20260903-2');
+      url.searchParams.set('v', '20260903-3');
       link.href = url.toString();
     }
   } catch (_) {}
@@ -98,6 +98,41 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 const projectForm = document.getElementById('projectForm');
 if (projectForm) {
+  const projectTypeSelect = projectForm.querySelector('select[name="type"]');
+  const projectTypes = [
+    'Landing page',
+    'Korporativ sayt',
+    'Internet do‘kon',
+    'Marketplace platforma',
+    'Startup / SaaS platforma',
+    'Portfolio sayt',
+    'AI integratsiyali sayt',
+    'CRM va admin panel',
+    'Saytni qayta dizayn qilish',
+    'Texnik xizmat',
+    'Boshqa / individual loyiha'
+  ];
+
+  if (projectTypeSelect) {
+    projectTypeSelect.innerHTML = '';
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Loyiha turini tanlang';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    projectTypeSelect.appendChild(placeholder);
+
+    projectTypes.forEach((type) => {
+      const option = document.createElement('option');
+      option.value = type;
+      option.textContent = type;
+      projectTypeSelect.appendChild(option);
+    });
+
+    projectTypeSelect.required = true;
+  }
+
   projectForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -111,8 +146,8 @@ if (projectForm) {
       type: String(formData.get('type') || '').trim()
     };
 
-    if (!payload.name || !payload.phone) {
-      status.textContent = 'Ism va telefon raqamini kiriting.';
+    if (!payload.name || !payload.phone || !payload.type) {
+      status.textContent = 'Ism, telefon raqami va loyiha turini kiriting.';
       return;
     }
 
